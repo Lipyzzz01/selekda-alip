@@ -139,3 +139,81 @@ function resetBall() {
 function updateScoreDisplay() {
     document.getElementById('score').textContent = `Score = ${score}`;
 }
+
+function handlePlayerMovement() {
+    if (keys['a']) player.x -= player.speed; // Gerak kiri
+    if (keys['d']) player.x += player.speed; // Gerak kanan
+
+    // Membatasi gerakan pemain agar tidak keluar dari kanvas
+    if (player.x < 0) player.x = 0;
+    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+    // Melompat
+    if (player.isJumping) {
+        player.y -= player.jumpSpeed;
+        player.jumpSpeed -= 0.5; // Efek gravitasi
+
+        if (player.y >= 450) { // Kembali ke tanah
+            player.y = 450;
+            player.isJumping = false;
+        }
+    }
+}
+
+// Gerakan musuh otomatis mengikuti bola
+function updateEnemy() {
+    if (enemy.x + enemy.width / 2 < ball.x) {
+        enemy.x += enemy.speed; // Musuh bergerak ke kanan
+    } else {
+        enemy.x -= enemy.speed; // Musuh bergerak ke kiri
+    }
+
+    // Membatasi gerakan musuh agar tidak keluar dari kanvas
+    if (enemy.x < 0) enemy.x = 0;
+    if (enemy.x + enemy.width > canvas.width) enemy.x = canvas.width - enemy.width;
+}
+
+// Menyimpan status tombol yang ditekan
+const keys = {};
+
+window.addEventListener('keydown', (e) => {
+    keys[e.key.toLowerCase()] = true;
+
+    if (e.key === 'w' && !player.isJumping) {
+        player.isJumping = true;
+        player.jumpSpeed = 10; // Kecepatan lompat
+    }
+});
+
+window.addEventListener('keyup', (e) => {
+    keys[e.key.toLowerCase()] = false;
+});
+
+function gameLoop() {
+    if (!gameRunning) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Membersihkan kanvas
+
+    drawBackground();
+    drawGoals();       // Menggambar gawang
+    drawPlayer();      // Menggambar pemain
+    drawEnemy();       // Menggambar musuh
+    drawBall();        // Menggambar bola
+
+    handlePlayerMovement(); // Memproses gerakan pemain
+    updateEnemy();          // Memproses gerakan musuh
+    updateBall();           // Memperbarui posisi bola
+
+    requestAnimationFrame(gameLoop);
+}
+
+function playGame() {
+    if (imagesLoaded === totalImages && !gameRunning) {
+        gameRunning = true;
+        gameLoop();
+    } else {
+        console.log("Gambar belum semua dimuat atau game sudah berjalan!");
+    }
+}
+
+document.getElementById('playButton').addEventListener('click', playGame);
