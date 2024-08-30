@@ -15,11 +15,11 @@ ballImage.src = 'asset/Ball 01.png';
 
 //gambar gawang
 const goalImage = new Image();
-goalImage.src = 'asset/goal.png';
+goalImage.src = 'asset/Goal.png';
 
 //gambar musuh
 const enemyImage = new Image();
-enemyImage.src = 'asset/IdleBrazil.png'; 
+enemyImage.src = 'asset/IdleEnglands.png'; 
 
 //memastikan semua gambar telah dimuat
 let imagesLoaded = 0;
@@ -141,6 +141,7 @@ function updateScoreDisplay() {
 }
 
 function handlePlayerMovement() {
+    // Gerak kiri dan kanan
     if (keys['a']) player.x -= player.speed; // Gerak kiri
     if (keys['d']) player.x += player.speed; // Gerak kanan
 
@@ -157,6 +158,25 @@ function handlePlayerMovement() {
             player.y = 450;
             player.isJumping = false;
         }
+    }
+
+    // Tendang bola saat spasi ditekan
+    if (keys[' ']) {
+        kickBall();
+    }
+}
+
+// Fungsi untuk menendang bola
+function kickBall() {
+    
+    const dx = ball.x - player.x;
+    const dy = ball.y - player.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // Jika bola dekat dengan pemain, tendang bola
+    if (distance < ball.radius + player.width / 2) {
+        ball.vx = (ball.x - player.x) / 5; 
+        ball.vy = -3; 
     }
 }
 
@@ -192,17 +212,17 @@ window.addEventListener('keyup', (e) => {
 function gameLoop() {
     if (!gameRunning) return;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Membersihkan kanvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawBackground();
-    drawGoals();       // Menggambar gawang
-    drawPlayer();      // Menggambar pemain
-    drawEnemy();       // Menggambar musuh
-    drawBall();        // Menggambar bola
+    drawGoals();        
+    drawPlayer();       
+    drawEnemy();        
+    drawBall();         
 
-    handlePlayerMovement(); // Memproses gerakan pemain
-    updateEnemy();          // Memproses gerakan musuh
-    updateBall();           // Memperbarui posisi bola
+    handlePlayerMovement(); 
+    updateEnemy();          
+    updateBall();           
 
     requestAnimationFrame(gameLoop);
 }

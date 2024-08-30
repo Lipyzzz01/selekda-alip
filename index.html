@@ -2,25 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Selekda</title>
+    <title>Football Game</title>
     <style>
         body {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #282c34;
+        }
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         #gameCanvas {
-            border: 2px solid #000;
+            border: 2px solid #fff;
+            background-color: #000;
+        }
+        button {
+            margin: 0 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #61dafb;
+            color: #000;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #21a1f1;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="1000" height="600"></canvas>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="1000" height="600"></canvas>
+            <button id="playButton">Play</button>
+    </div>
+    
     <script src="game.js"></script>
 </body>
 </html>
